@@ -2,6 +2,9 @@
 
 A simple implementation of hCaptcha on PHP >= 8.1.
 
+## Demo
+https://hcaptcha.comiti.me
+
 ## Features
 
 - Easy to integrate hCaptcha with customizable themes and sizes.
