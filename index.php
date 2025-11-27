@@ -5,8 +5,8 @@ use \hcaptcha\enums\HCaptchaTheme;
 $human = false;
 $captchaResponse = null;
 $hCaptcha = new HCaptcha(
-  "your_public_key",
-  "your_private_key",
+  CAPTCHA["SITE_KEY"],
+  CAPTCHA["PRIVATE_KEY"],
   HCaptchaTheme::DARK
 );
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
