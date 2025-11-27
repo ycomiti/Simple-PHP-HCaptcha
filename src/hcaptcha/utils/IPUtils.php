@@ -3,7 +3,7 @@ namespace hcaptcha\utils;
 
 class IPUtils {
 
-  public function getRemoteIP() : ?string {
+  public function getRemoteIP(): ?string {
     return $this->validate(
       isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? $_SERVER['HTTP_CF_CONNECTING_IP'] :
       (isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] :
