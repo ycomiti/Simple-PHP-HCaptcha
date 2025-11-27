@@ -1,9 +1,9 @@
 <?php
 namespace hcaptcha\services;
 
-use hcaptcha\enums\HCaptchaSize;
-use hcaptcha\enums\HCaptchaTheme;
-use hcaptcha\utils\IPUtils;
+use \hcaptcha\enums\HCaptchaSize;
+use \hcaptcha\enums\HCaptchaTheme;
+use \hcaptcha\utils\IPUtils;
 
 class HCaptcha extends IPUtils {
 
@@ -27,26 +27,24 @@ class HCaptcha extends IPUtils {
   ) {
     $this->theme = $theme ?? HCaptchaTheme::LIGHT;
     $this->size = $size ?? HCaptchaSize::NORMAL;
-    $this->url = $url ?? 'https://hcaptcha.com/siteverify';
-    $this->scriptUrl = $scriptUrl ?? 'https://hcaptcha.com/1/api.js';
+    $this->url = $url ?? "https://hcaptcha.com/siteverify";
+    $this->scriptUrl = $scriptUrl ?? "https://hcaptcha.com/1/api.js";
     $this->publicKey = $publicKey;
     $this->secretKey = $secretKey;
-
-    $this->remoteIp = $this->getRemoteIp();
-    if ($this->remoteIp === null)
-      throw new \Exception('Unable to retrieve the real user\'s IP address.');
+    if (($this->remoteIp = $this->getRemoteIP()) === null)
+      throw new \Exception("Unable to retrieve the real user's IP address.");
   }
 
-  public function verify(string $response): void {
+  public function verify($response): void {
     try {
       $data = [
         'secret' => $this->secretKey,
         'response' => $response,
-        'remoteip' => $this->remoteIp,
+        'remoteip' => $this->remoteIp
       ];
       $options = [
         'http' => [
-          'header'  => 'Content-type: application/x-www-form-urlencoded\r\n',
+          'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
           'method'  => 'POST',
           'content' => http_build_query($data),
         ],
@@ -55,27 +53,27 @@ class HCaptcha extends IPUtils {
       $result = file_get_contents($this->url, false, $context);
       $resultJson = json_decode($result);
       $this->response = json_encode($resultJson, JSON_PRETTY_PRINT);
-      $this->human = (bool) $resultJson->success;
+      $this->human = (boolean)$resultJson->success;
+      return;
     } catch (\Exception $e) {
-      throw new \Exception(sprintf('Failed to verify Captcha: %s', $e->getMessage()));
+      throw new Exception(sprintf("Failed to verify Captcha: %s", $e));
     }
+    $this->human = false;
   }
 
   public function getTheme(): HCaptchaTheme { return $this->theme; }
 
   public function getSize(): HCaptchaSize { return $this->size; }
 
-  public function getScript(): string {
-    return sprintf('<script src="%s" async defer></script>', htmlspecialchars($this->getScriptUrl()));
-  }
+  public function getScript(): string { return sprintf("<script src=\"%s\" async defer></script>", htmlspecialchars($this->getScriptUrl())); }
 
   public function getScriptUrl(): string { return $this->scriptUrl; }
 
-  public function display(): void { echo $this->getHtml(); }
+  public function display(): void { echo($this->getHtml()); }
 
   public function getHtml(): string {
     return sprintf(
-      '<div class="h-captcha" data-theme="%s" data-size="%s" data-sitekey="%s"></div>',
+      "<div class=\"h-captcha\" data-theme=\"%s\" data-size=\"%s\" data-sitekey=\"%s\"></div>",
       strtolower($this->getTheme()->name),
       strtolower($this->getSize()->name),
       htmlspecialchars($this->getPublicKey())

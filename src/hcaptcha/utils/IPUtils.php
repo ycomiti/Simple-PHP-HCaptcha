@@ -4,20 +4,17 @@ namespace hcaptcha\utils;
 class IPUtils {
 
   public function getRemoteIP(): ?string {
-    return $this->validate(
-      isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? $_SERVER['HTTP_CF_CONNECTING_IP'] :
-      (isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] :
-      (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] :
-      (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null)))
-    );
+	if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) return $this->getValid($_SERVER['HTTP_CF_CONNECTING_IP']);
+	if (isset($_SERVER['HTTP_CLIENT_IP'])) return $this->getValid($_SERVER['HTTP_CLIENT_IP']);
+	return $this->getValid($_SERVER['REMOTE_ADDR']);
   }
 
-  protected function validate(string $remoteIp): ?string {
+  protected function getValid(?string $ip): ?string {
+    if ($ip === null) return null;
     return (
-      (filter_var($remoteIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ||
-      filter_var($remoteIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ?
-      $remoteIp : null
-    );
+      filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ||
+      filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
+    ) ? $ip : null;
   }
-
+  
 }
