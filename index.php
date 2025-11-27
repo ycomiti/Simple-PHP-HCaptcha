@@ -9,11 +9,13 @@ $hCaptcha = new HCaptcha(
   CAPTCHA["PRIVATE_KEY"],
   HCaptchaTheme::DARK
 );
+$response = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['h-captcha-response'])) {
     $hCaptcha->verify($_POST['h-captcha-response']);
     $captchaResponse = $hCaptcha->getResponse();
     $human = (boolean)$hCaptcha->isHuman();
+	$response = $hCaptcha->getResponse();
   }
 }
 ?>
@@ -25,10 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?= $hCaptcha->getScript() ?>
   </head>
   <body>
+    <nav>
+    </nav>
     <form method="POST">
       <?php
         $hCaptcha->display();
-        var_dump($human);
+        var_dump(["response" => ($response ?? "no response"), "human" => $human]);
       ?>
       <input type="submit" name="submit" value="Submit">
     </form>
