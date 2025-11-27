@@ -31,12 +31,11 @@ class HCaptcha extends IPUtils {
     $this->scriptUrl = $scriptUrl ?? "https://hcaptcha.com/1/api.js";
     $this->publicKey = $publicKey;
     $this->secretKey = $secretKey;
-    if (($this->remoteIp = $this->getUserIP()) === null) {
+    if (($this->remoteIp = $this->getUserIP()) === null)
       throw new Exception("Unable to retrieve the real user's IP address.");
-    }
   }
 
-  public function verify($response) : void {
+  public function verify($response): void {
     try {
       $data = [
         'secret' => $this->secretKey,
@@ -62,51 +61,33 @@ class HCaptcha extends IPUtils {
     $this->human = false;
   }
 
-  public function getTheme() : HCaptchaTheme {
-    return $this->theme;
-  }
+  public function getTheme(): HCaptchaTheme { return $this->theme; }
 
-  public function getSize() : HCaptchaSize {
-    return $this->size;
-  }
+  public function getSize(): HCaptchaSize { return $this->size; }
 
-  public function getScript() : string {
-    return sprintf("<script src=\"%s\" async defer></script>", htmlspecialchars($this->getScriptUrl()));
-  }
+  public function getScript(): string { return sprintf("<script src=\"%s\" async defer></script>", htmlspecialchars($this->getScriptUrl())); }
 
-  public function getScriptUrl() : string {
-    return $this->scriptUrl;
-  }
+  public function getScriptUrl(): string { return $this->scriptUrl; }
 
-  public function display() : void {
-    echo(
-      sprintf(
-        "<div class=\"h-captcha\" data-theme=\"%s\" data-size=\"%s\" data-sitekey=\"%s\"></div>",
-        strtolower($this->getTheme()->name),
-        strtolower($this->getSize()->name),
-        htmlspecialchars($this->getPublicKey())
-      )
+  public function display(): void { echo($this->getHtml()); }
+
+  public function getHtml(): string {
+    return sprintf(
+      "<div class=\"h-captcha\" data-theme=\"%s\" data-size=\"%s\" data-sitekey=\"%s\"></div>",
+      strtolower($this->getTheme()->name),
+      strtolower($this->getSize()->name),
+      htmlspecialchars($this->getPublicKey())
     );
   }
 
-  public function getRemoteIp() : ?string {
-    return $this->remoteIp;
-  }
+  public function getRemoteIp(): ?string { return $this->remoteIp; }
 
-  public function getPublicKey() : string {
-    return $this->publicKey;
-  }
+  public function getPublicKey(): string { return $this->publicKey; }
 
-  public function getSecretKey() : string {
-    return $this->secretKey;
-  }
+  public function getSecretKey(): string { return $this->secretKey; }
 
-  public function getResponse() : ?string {
-    return $this->response;
-  }
+  public function getResponse(): ?string { return $this->response; }
 
-  public function isHuman() : bool {
-    return $this->human;
-  }
+  public function isHuman(): bool { return $this->human; }
 
 }
