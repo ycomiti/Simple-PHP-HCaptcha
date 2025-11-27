@@ -19,18 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-<head>
-  <meta charset="utf-8">
-  <title>hCaptcha example</title>
-  <?= $hCaptcha->getScript() ?>
-</head>
-<body>
-  <form method="POST">
-    <?php
-      $hCaptcha->display();
-      var_dump($human);
-    ?>
-    <input type="submit" name="submit" value="Submit">
-  </form>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <title>hCaptcha example</title>
+    <?= $hCaptcha->getScript() ?>
+  </head>
+  <body>
+    <form method="POST">
+      <?php
+        $hCaptcha->display();
+        var_dump($human);
+      ?>
+      <input type="submit" name="submit" value="Submit">
+    </form>
+  </body>
 </html>
